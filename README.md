@@ -1,4 +1,5 @@
 # Sierra Minera Soil Dataset – Reproducible Pb Mapping in R
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18940847.svg)](https://doi.org/10.5281/zenodo.18940847)
 
 This repository contains a reproducible method in **R** to integrate heterogeneous soil geochemistry datasets from the Sierra Minera mining district (Cartagena–La Unión, SE Spain) and generate **lead (Pb) maps** from those data.
 
@@ -198,7 +199,6 @@ Instead, it reads and harmonizes these heterogeneous sources in order to generat
 
 # Status
 
-Initial reproducible method for Pb mapping in the Sierra Minera.
-
+Initial reproducible method for Pb mapping in soils of the Sierra Minera.
 Future developments may extend the code to additional elements, spatial products, and more general mapping workflows.
 
