@@ -142,6 +142,9 @@ Interactive HTML maps generated with Leaflet are available in the repository:
 
 - [Pb sampling map](figures/Pb_map_Sierra_Minera.html)
 - [Interpolated Pb map](figures/03_raster_pb_map.html)
+
+  **Note:** GitHub does not render interactive Leaflet maps directly in the browser preview.  
+To visualize the maps, download the HTML files and open them locally in a web browser.
 ---
 
 # Data Availability
