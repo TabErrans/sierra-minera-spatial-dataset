@@ -40,8 +40,7 @@ The resulting code allows reproducible spatial analysis and visualization of lea
 
 The datasets originate from soil studies conducted in the Sierra Minera mining district.
 
-Part of the material derives from laboratory datasets associated with research carried out by **José Matías Peñas Castejón** and collaborators.
-
+The datasets used in this repository originate from soil geochemistry studies conducted by **José Matías Peñas Castejón** and collaborators in the Sierra Minera mining district (Cartagena–La Unión, SE Spain).
 This repository reorganizes these heterogeneous sources into a reproducible spatial dataset suitable for open scientific analysis and cartographic visualization in **R**.
 
 ---
