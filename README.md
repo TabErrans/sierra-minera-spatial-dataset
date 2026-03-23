@@ -1,9 +1,9 @@
-# Sierra Minera Soil Dataset – Reproducible Pb Mapping in R
+# Sierra Minera Soil Dataset – Reproducible Multi-element Mapping in R
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18940847.svg)](https://doi.org/10.5281/zenodo.18940847)
 
-This repository contains a reproducible method in **R** to integrate heterogeneous soil geochemistry datasets from the Sierra Minera mining district (Cartagena–La Unión, SE Spain) and generate **lead (Pb) maps** from those data.
+This repository contains a reproducible method in **R** to integrate heterogeneous soil geochemistry datasets from the Sierra Minera mining district (Cartagena–La Unión, SE Spain) and generate **multi-element soil maps (Pb, Zn, As, Cd)**.
 
-The code reorganizes raw laboratory spreadsheets into a spatial master table and uses that harmonized dataset to produce exploratory and interpolated Pb maps.
+The code reorganizes raw laboratory spreadsheets into a spatial master table and uses that harmonized dataset to produce both exploratory and interpolated maps.
 
 The raw datasets are archived in Zenodo, while this repository provides the reproducible scripts required to generate the maps in **R**.
 
@@ -16,38 +16,41 @@ The raw datasets are archived in Zenodo, while this repository provides the repr
 - [Reproducible Method](#reproducible-method)
 - [Scripts](#scripts)
 - [Results](#results)
+- [Interactive Map](#interactive-map)
 - [Data Availability](#data-availability)
 - [Data Sources](#data-sources)
 - [Repository Structure](#repository-structure)
 - [Status](#status)
+
 ---
 
 # Overview
 
-The purpose of this repository is to provide a reproducible method to generate Pb maps for the Sierra Minera from heterogeneous soil geochemistry spreadsheets.
+The purpose of this repository is to provide a reproducible method to generate **multi-element soil maps** for the Sierra Minera from heterogeneous geochemical datasets.
 
 The method consists of three main steps:
 
 1. Load heterogeneous Excel datasets  
 2. Harmonize sample identifiers and UTM coordinates  
-3. Generate Pb maps in R from the harmonized spatial dataset  
+3. Generate multi-element maps in R from the harmonized spatial dataset  
 
-The resulting code allows reproducible spatial analysis and visualization of lead concentrations in soils of the Sierra Minera.
+The resulting workflow enables reproducible spatial analysis and visualization of trace elements in soils.
 
 ---
 
 # Context
 
-The datasets originate from soil studies conducted in the Sierra Minera mining district.
+The datasets originate from soil geochemistry studies conducted in the Sierra Minera mining district.
 
 The datasets used in this repository originate from soil geochemistry studies conducted by **José Matías Peñas Castejón** and collaborators in the Sierra Minera mining district (Cartagena–La Unión, SE Spain).
+
 This repository reorganizes these heterogeneous sources into a reproducible spatial dataset suitable for open scientific analysis and cartographic visualization in **R**.
 
 ---
 
 # Reproducible Method
 
-The method implemented in this repository is based on the following logic:
+The method implemented in this repository follows this logic:
 
 ```text
 Raw Excel datasets
@@ -56,17 +59,16 @@ Harmonization of sample IDs and UTM coordinates
         ↓
 Construction of a master spatial table
         ↓
-Extraction of total Pb values
+Extraction of total soil element concentrations (Pb, Zn, As, Cd)
         ↓
-Interactive Pb mapping in R
+Interactive mapping in R (Leaflet)
         ↓
-Interpolated Pb surface and raster visualization
+IDW interpolation and raster visualization with hillshade
 ````
 
-The raw data can be downloaded from Zenodo and placed in a local folder such as `raw_data/` (or any folder name chosen by the user).
-Only the path configuration in the first script needs to be adjusted before running the code.
+The raw data can be downloaded from Zenodo and placed in a local folder such as `raw_data/`.
 
-Once configured, the scripts allow the user to reproduce the Pb maps directly in **R**.
+Once configured, the scripts allow the user to reproduce all maps directly in **R**.
 
 ---
 
@@ -86,41 +88,32 @@ Main tasks:
 * review duplicated coordinate records
 * construct a master spatial table
 
-Main output fields:
-
-```text
-sample_id
-type
-number
-utm_x
-utm_y
-```
-
 ---
 
-## `R/02_map_total_pb_leaflet.R`
+## `R/02_leaflet_total_elements_map.R`
 
-Creates an interactive **Leaflet map of total Pb concentrations in soil**.
+Creates an interactive **Leaflet map of total soil element concentrations (Pb, Zn, As, Cd)**.
 
 Main tasks:
 
-* identify total soil metal sheets
-* extract Pb concentrations
-* join Pb values with spatial coordinates
-* display sampling points and Pb values interactively
+* identify total soil metal datasets
+* extract element concentrations
+* join values with spatial coordinates
+* generate multi-layer interactive visualization
+* dynamic legend switching per element
 
 ---
 
-## `R/03_interpolate_total_pb_idw_leaflet.R`
+## `R/03_leaflet_idw_total_elements_map.R`
 
-Generates an interpolated **Pb surface** using **Inverse Distance Weighting (IDW)** and displays it together with a DEM-derived hillshade background.
+Generates interpolated **multi-element surfaces** using **Inverse Distance Weighting (IDW)** and overlays them on a DEM-derived hillshade.
 
 Main tasks:
 
-* interpolate total Pb concentrations
-* generate a raster surface
-* overlay the raster on terrain relief
-* visualize the result interactively in Leaflet
+* interpolate element concentrations
+* generate raster surfaces
+* overlay terrain relief (hillshade)
+* visualize multi-layer outputs interactively
 
 ---
 
@@ -128,23 +121,29 @@ Main tasks:
 
 Example outputs generated by the reproducible code.
 
-## Sampling points and Pb concentrations
+## Sampling points and element concentrations
 
-![Pb sampling points map](figures/02_script_result.png)
+![Sampling points map](figures/02_script_result.png)
 
-## Interpolated Pb raster surface
+## Interpolated raster surface (example: Pb)
 
-![Pb interpolation raster](figures/03_raster.png)
+![Interpolation raster](figures/03_raster.png)
 
-## Interactive maps
+---
 
-Interactive HTML maps generated with Leaflet are available in the repository:
+# Interactive Map
 
-- [Pb sampling map](figures/Pb_map_Sierra_Minera.html)
-- [Interpolated Pb map](figures/03_raster_pb_map.html)
+An interactive multi-element map (IDW + hillshade) is available online:
 
-  **Note:** GitHub does not render interactive Leaflet maps directly in the browser preview.  
-To visualize the maps, download the HTML files and open them locally in a web browser.
+🔗 **[Open interactive map](https://rpubs.com/Cpurpurea/sierra-minera-multielement-idw-map)**
+
+This map allows exploration of:
+
+* multiple soil elements (Pb, Zn, As, Cd)
+* interpolated surfaces
+* sampling point data
+* terrain context
+
 ---
 
 # Data Availability
@@ -154,29 +153,18 @@ The raw soil geochemistry datasets used in this repository are archived in Zenod
 [https://doi.org/10.5281/zenodo.18940847](https://doi.org/10.5281/zenodo.18940847)
 
 This repository does not duplicate the archived raw dataset.
-Instead, it provides the reproducible R code required to integrate those raw data and generate Pb maps for the Sierra Minera.
+Instead, it provides the reproducible R workflow required to integrate and analyze the data.
 
 ---
 
 # Data Sources
 
-The method integrates several heterogeneous laboratory spreadsheets and soil datasets associated with geochemical studies in the Sierra Minera mining district (Cartagena–La Unión, SE Spain).
-
-The current version processes data from the following source files:
-
-* `Totales_Suelos.xlsx` — total elemental concentrations in soils
-* `DTPA_AGRICOLAS_NATURALES.xlsx` — DTPA-extractable trace elements in agricultural soils
-* `Suelos_Agricolas_Inma_UBM_BARGE_BCR.xlsx` — sequential extraction data (BCR method)
-* `TABLA_RESULTADOS_SUELOS_URBANOS.xlsx` — analytical results from urban soil samples
-* `Laboratorio_SYNALAB_todos_los_resultados_por_capa_sellado.xlsx` — laboratory reports with analytical results by soil layer
-* `ALEDO GUILLERMO BUENO.xls` — historical spreadsheet containing additional soil measurements
-
-These files originate from laboratory analyses and research datasets compiled during soil geochemistry studies of the Sierra Minera.
+The method integrates several heterogeneous laboratory datasets associated with soil geochemistry studies in the Sierra Minera mining district.
 
 The material derives from datasets associated with research carried out by **José Matías Peñas Castejón** and collaborators.
 
-The code does not modify the original archived spreadsheets.
-Instead, it reads and harmonizes these heterogeneous sources in order to generate reproducible Pb maps in **R**.
+The code does not modify the original spreadsheets.
+Instead, it harmonizes and integrates them into a reproducible spatial workflow.
 
 ---
 
@@ -187,8 +175,8 @@ Instead, it reads and harmonizes these heterogeneous sources in order to generat
 ├── README.md
 ├── R/
 │   ├── 01_build_samples_master.R
-│   ├── 02_map_total_pb_leaflet.R
-│   └── 03_interpolate_total_pb_idw_leaflet.R
+│   ├── 02_leaflet_total_elements_map.R
+│   └── 03_leaflet_idw_total_elements_map.R
 └── figures/
     ├── 02_script_result.png
     └── 03_raster.png
@@ -198,6 +186,13 @@ Instead, it reads and harmonizes these heterogeneous sources in order to generat
 
 # Status
 
-Initial reproducible method for Pb mapping in soils of the Sierra Minera.
-Future developments may extend the code to additional elements, spatial products, and more general mapping workflows.
+Initial reproducible workflow for multi-element soil mapping in the Sierra Minera.
 
+Future developments may include:
+
+* additional elements
+* improved interpolation methods
+* statistical analysis of geochemical patterns
+* integration with environmental and human exposure frameworks
+
+```
