@@ -1,5 +1,5 @@
 # Sierra Minera Soil Dataset – Reproducible Multi-element Mapping in R
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18940847.svg)](https://doi.org/10.5281/zenodo.18940847)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19441307.svg)](https://doi.org/10.5281/zenodo.19441307)
 
 This repository contains a reproducible method in **R** to integrate heterogeneous soil geochemistry datasets from the Sierra Minera mining district (Cartagena–La Unión, SE Spain) and generate **multi-element soil maps (Pb, Zn, As, Cd)**.
 
