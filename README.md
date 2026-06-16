@@ -116,7 +116,7 @@ Main tasks:
 
 ---
 
-## `R/0_build_geo_total_elements_wide.R`
+## `R/2_build_geo_total_elements_wide.R`
 
 Combines spatial and geochemical information into a single georeferenced dataset.
 
@@ -286,16 +286,17 @@ For a detailed description of the coding scheme, see:
 │   └── geo_total_elements_wide.rds
 ├── R/
 │   ├── 0_build_samples_master.R
-│   ├── 0_build_geo_total_elements_wide.R
-│   ├── 1_map_total_elements_leaflet.R
 │   ├── 1_leaflet_idw_total_elements_map.R
-│   └── 1_map_pb_terrain_3d.R
+│   ├── 1_map_pb_terrain_3d.R
+│   ├── 1_map_total_elements_leaflet.R
+│   └── 2_build_geo_total_elements_wide.R
 └── figures/
-    ├── total_elements_leaflet.png
-    ├── total_elements_idw.png
+    ├── pb_terrain_3d.html
     ├── pb_terrain_3d.png
-    └── pb_terrain_3d.html
+    ├── total_elements_idw.png
+    └── total_elements_leaflet.png
 ```
+
 
 ---
 
