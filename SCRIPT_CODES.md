@@ -19,7 +19,7 @@ Leaflet outputs, and terrain-related visualization.
 
 Examples:
 - 1_map_total_elements_leaflet.R
-- 1_idw_total_elements_leaflet.R
+- 1_leaflet_idw_total_elements_map.R
 
 ### 2_ Database / structured exports
 Scripts for building database-oriented outputs from the master tables,
@@ -27,7 +27,7 @@ including exportable tabular structures for reuse in analysis, QA/QC,
 and future integration.
 
 Examples:
-- 2_build_database_exports.R
+- 2_build_geo_total_elements_wide.R
 
 ### 8_ Exploratory / sandbox / temporary
 Experimental scripts, tests, prototypes, or intermediate work that may be useful
@@ -55,8 +55,8 @@ Pattern:
 Examples:
 - 0_build_samples_master.R
 - 1_map_total_elements_leaflet.R
-- 1_idw_total_elements_leaflet.R
-- 2_build_database_exports.R
+- 1_leaflet_idw_total_elements_map.R
+- 2_build_geo_total_elements_wide.R
 - 9_legacy_arable.R
 
 ## Notes
