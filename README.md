@@ -20,24 +20,6 @@ git clone --branch projects/english https://github.com/TabErrans/sierra-minera-s
 cd sierra-minera-spatial-dataset
 ```
 
-The five R scripts contain **1,123 physical lines of code**, counted with
-`cloc 2.12`, excluding blank lines and comment-only lines. Documentation, data,
-generated HTML, images and CI are not included. There are no CI workflows in
-this revision. Reproduce the source-only count with:
-
-```bash
-cloc R --include-lang=R --by-file
-```
-
-| Script | Code lines |
-| --- | ---: |
-| `0_build_samples_master.R` | 146 |
-| `1_leaflet_idw_total_elements_map.R` | 359 |
-| `1_map_pb_terrain_3d.R` | 180 |
-| `1_map_total_elements_leaflet.R` | 349 |
-| `2_build_geo_total_elements_wide.R` | 89 |
-| **Total** | **1,123** |
-
 ---
 
 # Table of Contents
