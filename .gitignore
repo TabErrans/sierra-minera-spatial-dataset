@@ -1,0 +1,13 @@
+# All datasets remain local and must never be committed.
+/data/
+/outputs/
+/tests/results/
+/.Rproj.user/
+/.Rhistory
+/.RData
+/renv/library/
+/.venv/
+
+# Never publish local dependency bundles or preparation environments
+/packages/
+/sandbox/

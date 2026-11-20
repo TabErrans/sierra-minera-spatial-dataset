@@ -1,5 +1,5 @@
 # ============================================================
-# 0_build_geo_total_elements_wide.R
+# 2_build_geo_total_elements_wide.R
 #
 # Objective:
 #   - Load or create samples_master
@@ -21,15 +21,15 @@ suppressPackageStartupMessages({
 # -------------------------
 crs_utm <- 25830
 
-dir.create("data_processed", showWarnings = FALSE)
+dir.create("data/processed", recursive = TRUE, showWarnings = FALSE)
 
 # -------------------------
 # 1) Load or create samples_master
 # -------------------------
-if (file.exists("data_processed/samples_master.csv")) {
+if (file.exists("data/processed/samples_master.csv")) {
   
   samples_master <- readr::read_csv(
-    "data_processed/samples_master.csv",
+    "data/processed/samples_master.csv",
     show_col_types = FALSE
   )
   
@@ -39,7 +39,7 @@ if (file.exists("data_processed/samples_master.csv")) {
   
   readr::write_csv(
     samples_master,
-    "data_processed/samples_master.csv"
+    "data/processed/samples_master.csv"
   )
 }
 
@@ -65,14 +65,16 @@ area_wgs84 <- samples_sf %>%
   sf::st_sf(crs = crs_utm) %>%
   sf::st_transform(4326)
 
-dem <- elevatr::get_elev_raster(
+dem <- if (!is.null(getOption("sierra.dem_path"))) {
+  terra::rast(getOption("sierra.dem_path"))
+} else elevatr::get_elev_raster(
   locations = area_wgs84,
   z = 12,
   clip = "locations"
 )
 
 dem_utm <- terra::project(
-  terra::rast(dem),
+  if (inherits(dem, "SpatRaster")) dem else terra::rast(dem),
   paste0("EPSG:", crs_utm)
 )
 
@@ -94,14 +96,14 @@ samples_geo <- samples_master %>%
 
 readr::write_csv(
   samples_geo,
-  "data_processed/samples_geo.csv"
+  "data/processed/samples_geo.csv"
 )
 
 # -------------------------
 # 3) Load total elements table
 # -------------------------
 total_elements_wide <- readr::read_csv(
-  "data_processed/total_elements_wide.csv",
+  "data/processed/total_elements_wide.csv",
   show_col_types = FALSE
 )
 
@@ -124,12 +126,12 @@ geo_total_elements_wide <- samples_geo %>%
 # -------------------------
 readr::write_csv(
   geo_total_elements_wide,
-  "data_processed/geo_total_elements_wide.csv"
+  "data/processed/geo_total_elements_wide.csv"
 )
 
 saveRDS(
   geo_total_elements_wide,
-  "data_processed/geo_total_elements_wide.rds"
+  "data/processed/geo_total_elements_wide.rds"
 )
 
 # -------------------------

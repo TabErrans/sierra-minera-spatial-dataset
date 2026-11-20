@@ -1,7 +1,7 @@
 # ============================================================
-# 01_build_samples_master.R
+# 0_build_samples_master.R
 # Purpose:
-#   - Load all Excel files (data_raw/*.xlsx)
+#   - Load all Excel files (data/raw/*.xlsx)
 #   - Extract field sample IDs (L/G)
 #   - Normalize IDs (01L == 1L)
 #   - Extract UTM coordinates (utm_x/utm_y or x2/x3 in BCR sheets)
@@ -28,7 +28,7 @@ suppressPackageStartupMessages({
 # -------------------------
 # 0) Configuration
 # -------------------------
-data_dir <- "data_raw"
+data_dir <- "data/raw"
 excel_files <- list.files(data_dir, pattern = "\\.(xlsx|xls)$", full.names = TRUE)
 
 # -------------------------
@@ -44,7 +44,8 @@ inventory <- purrr::map_dfr(excel_files, function(fp){
 
 # Exclude derived sheet (previously identified as transformation of totals)
 inventory <- inventory %>%
-  filter(!(file == "Totales_Suelos.xlsx" & sheet == "Suelos_Contaminados"))
+  filter(!((file == "Totales_Suelos.xlsx" & sheet == "Suelos_Contaminados") |
+           (file == "total_soils_concentrations.xlsx" & sheet == "Contaminated_Soils")))
 
 # -------------------------
 # 2) Helper functions
@@ -55,7 +56,8 @@ to_num <- function(x) readr::parse_number(as.character(x))
 
 # Identify which column contains the sample ID depending on dataset
 pick_id_col <- function(nms){
-  candidates <- c("sample", "codigo_lab", "x1", "fase_a_acid_soluble", "codigo_sondeo") 
+  candidates <- c("sample", "lab_code", "borehole_code", "phase_a_acid_soluble",
+                  "codigo_lab", "x1", "fase_a_acid_soluble", "codigo_sondeo")
   hit <- intersect(candidates, nms)
   if (length(hit) == 0) return(NA_character_)
   hit[[1]]
