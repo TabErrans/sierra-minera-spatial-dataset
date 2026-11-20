@@ -1,3 +1,4 @@
+source("scripts/local_basemap.R")
 # =========================================================
 # Quick Leaflet map: total soil elements
 # Required objects already in memory:
@@ -23,10 +24,10 @@ elements <- c("Pb", "Zn", "As", "Cd")
 
 element_config <- tibble::tribble(
   ~element, ~label,      ~search_regex,                                      ~threshold, ~unit,
-  "Pb",     "Total Pb",  "(^pb$)|(^pb_)|(_pb$)|(_pb_)|plomo",                1000,       "mg/kg",
+  "Pb",     "Total Pb",  "(^pb$)|(^pb_)|(_pb$)|(_pb_)|lead|plomo",                1000,       "mg/kg",
   "Zn",     "Total Zn",  "(^zn$)|(^zn_)|(_zn$)|(_zn_)|zinc",                 1000,       "mg/kg",
-  "As",     "Total As",  "(^as$)|(^as_)|(_as$)|(_as_)|arsenico|arsénico",   100,        "mg/kg",
-  "Cd",     "Total Cd",  "(^cd$)|(^cd_)|(_cd$)|(_cd_)|cadmio",              100,        "mg/kg"
+  "As",     "Total As",  "(^as$)|(^as_)|(_as$)|(_as_)|arsenic|arsenico|arsénico",   100,        "mg/kg",
+  "Cd",     "Total Cd",  "(^cd$)|(^cd_)|(_cd$)|(_cd_)|cadmium|cadmio",              100,        "mg/kg"
 )
 
 # ---------------------------------------------------------
@@ -64,6 +65,9 @@ pick_id_col <- function(nms){
   candidates <- c(
     "sample_id",
     "sample",
+    "lab_code",
+    "borehole_code",
+    "phase_a_acid_soluble",
     "codigo_lab",
     "codigo_sondeo",
     "x1",
@@ -77,7 +81,7 @@ pick_id_col <- function(nms){
 # ---------------------------------------------------------
 # 4) Select TOTAL SOIL METALS sheets
 #    Includes:
-#      - Metales_Totales
+#      - Total_Metals (or the original Spanish sheet name)
 #      - Total_Hot_plate
 #      - Total_Hot_Plate_ppm
 #    Excludes:
@@ -88,7 +92,7 @@ sheet_names <- sub("^.* :: ", "", dataset_names)
 
 soil_total_idx <- str_detect(
   sheet_names,
-  regex("^metales_totales$|^total_hot_plate$|^total_hot_plate_ppm$", ignore_case = TRUE)
+  regex("^total_metals$|^metales_totales$|^total_hot_plate$|^total_hot_plate_ppm$", ignore_case = TRUE)
 )
 
 soil_total_names <- dataset_names[soil_total_idx]
@@ -328,7 +332,7 @@ overlay_groups <- c("All samples", active_cfg$label)
 
 # Base map
 map_obj <- leaflet() %>%
-  addProviderTiles(providers$CartoDB.Positron) %>%
+  add_local_basemap() %>%
   addCircleMarkers(
     data = all_pts_sf,
     lng = ~st_coordinates(geometry)[,1],
@@ -421,6 +425,7 @@ initial_group <- active_cfg$label[[1]]
 
 map_obj <- map_obj %>%
   addLayersControl(
+    baseGroups = c("IGN topographic", "Local terrain"),
     overlayGroups = overlay_groups,
     options = layersControlOptions(collapsed = FALSE)
   )
@@ -456,13 +461,13 @@ map_obj <- htmlwidgets::onRender(
       }
 
       map.on('overlayadd', function(e) {
-        if (e.name !== 'All samples') {
+        if (e.name !== 'Terrain' && e.name !== 'All samples') {
           updateLegend(e.name);
         }
       });
 
       map.on('overlayremove', function(e) {
-        if (e.name !== 'All samples') {
+        if (e.name !== 'Terrain' && e.name !== 'All samples') {
           var activeGroups = [];
           map.eachLayer(function(layer) {
             if (layer.options && layer.options.group && layer.options.group !== 'All samples') {

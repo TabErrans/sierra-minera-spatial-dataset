@@ -20,18 +20,21 @@ suppressPackageStartupMessages({
 # -------------------------
 # 0) Configuration
 # -------------------------
-out_dir <- "outputs/maps_3d"
+out_dir <- getOption("sierra.map_output_dir", "outputs/maps/terrain_3d")
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
 crs_utm <- 25830
 zscale_3d <- 10
-agg_fact <- 4
+# This bundled DEM is already reduced; do not aggregate it again.
+table_path <- if (file.exists("data/processed/geo_total_elements_wide.csv"))
+  "data/processed/geo_total_elements_wide.csv" else "data/geo_total_elements_wide.csv"
+geo_total_elements_wide <- read.csv(table_path)
 
-hydrology_gpkg <- "data_raw/hydrology/IGR_HI_v1_ES070_Segura.gpkg"
-hydrology_layer <- "hi_redtramo_l_es070"
+hydrology_gpkg <- "data/spatial/drainage.gpkg"
+hydrology_layer <- "drainage"
 
-png_out <- file.path(out_dir, "sierra_minera_terrain_3d_pb_points_ramblas.png")
-html_out <- file.path(out_dir, "sierra_minera_terrain_3d_pb_points_ramblas.html")
+png_out <- file.path(out_dir, "sierra_minera_terrain_3d_pb_points_drainage.png")
+html_out <- file.path(out_dir, "sierra_minera_terrain_3d_pb_points_drainage.html")
 legend_out <- file.path(out_dir, "sierra_minera_terrain_3d_pb_legend.png")
 
 # -------------------------
@@ -67,12 +70,7 @@ point_cols <- pb_cols[pb_index]
 # -------------------------
 # 2) Build reduced terrain
 # -------------------------
-dem_3d_web <- terra::aggregate(
-  dem_utm,
-  fact = agg_fact,
-  fun = mean,
-  na.rm = TRUE
-)
+dem_3d_web <- terra::rast("data/spatial/terrain_dem.tif")
 
 elmat_web <- rayshader::raster_to_matrix(dem_3d_web)
 

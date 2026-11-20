@@ -1,3 +1,4 @@
+source("scripts/local_basemap.R")
 # =========================================================
 # Interpolate total soil elements with IDW + hillshade
 # Purpose:
@@ -88,13 +89,15 @@ bb_vect <- terra::vect(bb_poly)
 # ---------------------------------------------------------
 # 3) Download DEM once
 # ---------------------------------------------------------
-dem_raw <- elevatr::get_elev_raster(
+dem_raw <- if (!is.null(getOption("sierra.dem_path"))) {
+  terra::rast(getOption("sierra.dem_path"))
+} else elevatr::get_elev_raster(
   locations = bb_poly,
   z = dem_zoom,
   clip = "locations"
 )
 
-dem <- terra::rast(dem_raw)
+dem <- if (inherits(dem_raw, "SpatRaster")) dem_raw else terra::rast(dem_raw)
 
 # ---------------------------------------------------------
 # 4) Base raster template
@@ -266,7 +269,7 @@ overlay_groups <- c(
 
 # Base map
 map_obj <- leaflet() %>%
-  addProviderTiles(providers$CartoDB.Positron) %>%
+  add_local_basemap(dem) %>%
   addRasterImage(
     hs,
     colors = pal_hs,
@@ -283,6 +286,8 @@ map_obj <- leaflet() %>%
     fillColor = "grey50",
     group = "All samples"
   )
+
+map_obj <- hideGroup(map_obj, "Relief")
 
 # Add element layers
 for (el in names(element_layers)) {
@@ -425,6 +430,7 @@ initial_group <- paste0("Interpolated ", active_cfg$element[[1]])
 
 map_obj <- map_obj %>%
   addLayersControl(
+    baseGroups = c("IGN topographic", "Local terrain"),
     overlayGroups = overlay_groups,
     options = layersControlOptions(collapsed = FALSE)
   )
@@ -462,7 +468,7 @@ map_obj <- htmlwidgets::onRender(
       updateLegend(initialGroup);
 
       map.on('overlayadd', function(e) {
-        if (e.name !== 'Relief' && e.name !== 'All samples') {
+        if (e.name !== 'Terrain' && e.name !== 'Relief' && e.name !== 'All samples') {
           updateLegend(e.name);
         }
       });
